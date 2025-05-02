@@ -40,7 +40,7 @@ export class ExamStack extends cdk.Stack {
         REGION: "eu-west-1",
       },
     });
-
+    table.grantReadData(question1Fn);
     new custom.AwsCustomResource(this, "moviesddbInitData", {
       onCreate: {
         service: "DynamoDB",
