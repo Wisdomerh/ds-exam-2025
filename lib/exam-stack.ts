@@ -71,7 +71,11 @@ export class ExamStack extends cdk.Stack {
     });
 
     const anEndpoint = api.root.addResource("patha");
-
+    const crewEndpoint = api.root.addResource("crew");
+    const roleEndpoint = crewEndpoint.addResource("{role}");
+    const moviesByRoleEndpoint = roleEndpoint.addResource("movies");
+    const movieByRoleEndpoint = moviesByRoleEndpoint.addResource("{movieId}");
+    movieByRoleEndpoint.addMethod("GET", new apig.LambdaIntegration(question1Fn));
 
     // ==================================
     // Question 2 - Event-Driven architecture
@@ -115,11 +119,17 @@ export class ExamStack extends cdk.Stack {
         REGION: "eu-west-1",
       },
     });
-    const crewEndpoint = api.root.addResource("crew");
-    const roleEndpoint = crewEndpoint.addResource("{role}");
-    const moviesByRoleEndpoint = roleEndpoint.addResource("movies");
-    const movieByRoleEndpoint = moviesByRoleEndpoint.addResource("{movieId}");
-    movieByRoleEndpoint.addMethod("GET", new apig.LambdaIntegration(question1Fn));
+    // Connect S3 → Topic 1
+    bucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.SnsDestination(topic1)
+    );
+
+    // Connect Topic 1 → Queue A
+    topic1.addSubscription(new subs.SqsSubscription(queueA));
+
+    // Connect Queue A → Lambda X
+    lambdaXFn.addEventSource(new events.SqsEventSource(queueA));
   }
 }
   
