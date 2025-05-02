@@ -136,7 +136,22 @@ export class ExamStack extends cdk.Stack {
       })
     );
 
+    // Connect Topic 1 → Queue B 
+    topic1.addSubscription(
+      new subs.SqsSubscription(queueB, {
+        filterPolicy: {
+          "address.country": sns.SubscriptionFilter.stringFilter({
+            allowlist: ["Ireland", "China"]
+          }),
+          email: sns.SubscriptionFilter.existsFilter()
+        }
+      })
+    );
+
     // Connect Queue A → Lambda X
     lambdaXFn.addEventSource(new events.SqsEventSource(queueA));
+    
+    // Connect Queue B → Lambda Y 
+    lambdaYFn.addEventSource(new events.SqsEventSource(queueB));
   }
 }
