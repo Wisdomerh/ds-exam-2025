@@ -115,7 +115,11 @@ export class ExamStack extends cdk.Stack {
         REGION: "eu-west-1",
       },
     });
-    
+    const crewEndpoint = api.root.addResource("crew");
+    const roleEndpoint = crewEndpoint.addResource("{role}");
+    const moviesByRoleEndpoint = roleEndpoint.addResource("movies");
+    const movieByRoleEndpoint = moviesByRoleEndpoint.addResource("{movieId}");
+    movieByRoleEndpoint.addMethod("GET", new apig.LambdaIntegration(question1Fn));
   }
 }
   
