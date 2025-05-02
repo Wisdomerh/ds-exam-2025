@@ -1,0 +1,9 @@
+{
+    "name": "Wisdom E",
+    "address": {
+        "street": "1 Main Street",
+        "city": "Dublin",
+        "country": "Ireland"
+    },
+    "email": "wisdom@gmail.com"
+}

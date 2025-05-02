@@ -1,0 +1,9 @@
+{
+    "name": "Wisdom E",
+    "address": {
+        "street": "1 Main Street",
+        "city": "honk kong",
+        "country": "china"
+    },
+    "email": "wisdom@gmail.com"
+}
